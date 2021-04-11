@@ -12,6 +12,37 @@ const todos = {
                 return helper.response('success', res, result, 200, 'all data labels')
             })
     },
+    view: (req, res) => {
+        sort = 'DESC'
+        const perPage = parseInt(req.query.per_page)
+        let currentPages = (req.query.page - 1) * perPage
+        model.todos.findAll({
+            where: { user_id: req.users.userId },
+            offset: currentPages, limit: perPage,
+            order: [['createdAt', sort]]
+
+        }).then((result) => {
+            model.todos.findAll({
+                where: { user_id: req.users.userId }
+            }).then((result2) => {
+                let to = currentPages + perPage
+                if (to >= result2.length) {
+                    to = result2.length
+                }
+                res.json({
+                    from: currentPages + 1,
+                    to: to,
+                    currentPages: currentPages,
+                    per_page: perPage,
+                    result: result,
+                    rows: result2.length
+                })
+            })
+        })
+            .catch((err) => {
+                return helper.response('error', res, null, 401, err)
+            })
+    },
     create: (req, res) => { 
         const data = req.body
         model.labels.findAll({ where: { id: data.label_id } })

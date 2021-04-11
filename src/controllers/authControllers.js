@@ -42,12 +42,11 @@ const auth = {
             .then((result) => {
                 
                 let user = result[0]
-                if (user.confirmed === false) {
-                    return helper.response('warning', res, null, 401, 'the account has not been confirmed by the admin')
-                }
                 bcrypt.compare(password, user.password, function (err, resCek) {
                     if (!resCek) {
                         return helper.response('warning', res, null, 401, 'password wrong')
+                    } else if (user.confirmed === false) {
+                        return helper.response('warning', res, null, 401, 'the account has not been confirmed by the admin')
                     }
                     delete user.dataValues.password
                     jwt.sign({ userId: user.id, role: user.role }, process.env.SECRET_KEY, { expiresIn: 3600 }, function (err, token) {
