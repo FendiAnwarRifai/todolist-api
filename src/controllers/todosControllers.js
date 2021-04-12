@@ -6,17 +6,15 @@ const helper = require('../helpers/help')
 const fs = require('fs')
 
 const todos = {
-    view: (req, res) => { 
-        model.todos.findAll({ where: { user_id: req.users.userId } })
-            .then((result) => {
-                return helper.response('success', res, result, 200, 'all data labels')
-            })
-    },
     view: (req, res) => {
         sort = 'DESC'
         const perPage = parseInt(req.query.per_page)
         let currentPages = (req.query.page - 1) * perPage
         model.todos.findAll({
+            include: [{
+                model: model.labels,
+                attributes: ['id', 'label', 'desc']
+            }],
             where: { user_id: req.users.userId },
             offset: currentPages, limit: perPage,
             order: [['createdAt', sort]]
@@ -69,7 +67,6 @@ const todos = {
                     return helper.response('warning', res, null, 401, 'label not found')
                 }
                 data.user_id = req.users.userId
-                data.completed = false
                 model.todos.update(data, {
                     where: {
                         id: data.id

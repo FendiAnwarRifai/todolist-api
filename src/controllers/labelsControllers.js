@@ -6,6 +6,14 @@ const helper = require('../helpers/help')
 const fs = require('fs')
 
 const labels = {
+    all: (req, res) => {
+        model.labels.findAll()
+        .then((result)=>{
+            return helper.response('success', res, result, 200, 'data all view successfully')
+        }).catch((error) => {
+            return helper.response('error', res, null, 401, error)
+        })
+    },
     view: (req, res) => {
         sort = req.query.sortbydesc || 'DESC'
         const perPage = parseInt(req.query.per_page)

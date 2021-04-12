@@ -6,6 +6,7 @@ const labelsController = require('../controllers/labelsControllers')
 
 router
     .get('/', verifyAccess, admin, labelsController.view)
+    .get('/view', verifyAccess, labelsController.all)
     .post('/create', verifyAccess, admin, labelsController.create)
     .patch('/update', verifyAccess, admin, labelsController.update)
     .delete('/delete/:id', verifyAccess, admin, labelsController.delete)

@@ -97,6 +97,18 @@ const users = {
             .catch((err) => {
                 return helper.response('error', res, null, 401, err)
             })
+    },
+    byLogin: (req, res) => {
+        model.users.findAll({
+            where: { id: req.users.userId }
+        }).then((result) => {
+            let user = result[0]
+            delete user.dataValues.password
+            return helper.response('success', res, user, 200, 'successfully')
+        })
+            .catch((err) => {
+                return helper.response('error', res, null, 401, err)
+            })
     }
 }
 module.exports = users

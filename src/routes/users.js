@@ -8,9 +8,10 @@ const authController = require('../controllers/authControllers')
 
 router
     .get('/', verifyAccess, admin, usersController.view)
+    .get('/byLogin', verifyAccess, usersController.byLogin)
     .post('/create', verifyAccess, admin, authController.register)
     .post('/confirmed', verifyAccess, admin, usersController.confirmed)
-    .patch('/update', verifyAccess, admin, usersController.update)
+    .patch('/update', verifyAccess, usersController.update)
     .delete('/delete/:id', verifyAccess, admin, usersController.delete)
 
 
